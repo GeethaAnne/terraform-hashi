@@ -1,5 +1,5 @@
 
-# Getting Started with Terraform\
+# Getting Started with Terraform
 \
 Terraform is the most popular langauge for defining and provisioning infrastructure as code (IaC).\
 \
