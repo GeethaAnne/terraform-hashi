@@ -2,7 +2,7 @@
 
 Terraform is the most popular langauge for defining and provisioning infrastructure as code (IaC).
 
-To install Terraform, simply visit [Terraform.io](https://www.terraform.io/downloads.html) and download the compressed binary application executable file deliverable for your platform, machine or environment on which you like to run code and do development.
+To install Terraform, simply visit [Terraform.io](https://www.terraform.io/downloads.html) and download the compressed binary application executable file deliverable for your platform, machine or environment on which you like to run code and do development
 
 With Terraform installed, let's dive right into it and start creating some infrastructure.
 
