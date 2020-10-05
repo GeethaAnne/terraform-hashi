@@ -131,7 +131,11 @@ $ terraform apply
 The command will take up to a few minutes to run and will display a message indicating that the resource was created with id:vpc-05ca7d3fece95456e
 
 Congratulations you have created infrastructure using Terraform! You can now visit the AWS's VPC dashboard to find the newly created vpc and subnets. Make sure to look in the right region thats specified in the main.tf file.
+
+VPC from AWS Console:
 ![](./vpc.png)
+
+Subnets from AWS Console:
 ![](subnet.png)
 
 ## Show Terraform State
@@ -149,10 +153,9 @@ The "terraform destroy" command will terminate resources defined in your Terrafo
 ```shell
 $ terraform destroy
 ```
-~[](./d2.png)
+![](./d2.png)
 
-Terraform shows its execution plan and waits for approval before making any changes.
-You can input "yes" to execute this plan and destroy the infrastructure.
+Even when deleting resources, Terraform shows its execution plan and waits for approval before making any changes.You can input "yes" to execute this plan and destroy the infrastructure.
 
 ![](destroy.png)
 
