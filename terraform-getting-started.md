@@ -96,7 +96,7 @@ This main.tf will read values of input variables from "variables.tf" file, which
  [here](https://www.terraform.io/docs/configuration/variables.html)
  
 #### Define the input variables
-To become truly shareable and version controlled, we need to parameterize the configurations. Open a variables.tf in your favorite text editor and add the below code:
+To become truly shareable and version controlled, we need to parameterize the configurations. In order to do that, open a variables.tf in your favorite text editor and add the below code:
 
 ```shell
 variable "cidr_block" {
