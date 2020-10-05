@@ -132,10 +132,10 @@ The command will take up to a few minutes to run and will display a message indi
 
 Congratulations you have created infrastructure using Terraform! You can now visit the AWS's VPC dashboard to find the newly created vpc and subnets. Make sure to look in the right region thats specified in the main.tf file.
 
-VPC from AWS Console:
+####  VPC from AWS Console:
 ![](./vpc.png)
 
-Subnets from AWS Console:
+#### Subnets from AWS Console:
 ![](subnet.png)
 
 ## Show Terraform State
