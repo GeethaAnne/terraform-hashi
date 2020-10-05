@@ -160,6 +160,6 @@ Even when deleting resources, Terraform shows its execution plan and waits for a
 ![](destroy.png)
 
 ## Next Steps
- As Cloud becomes more popular and enterprises are migrating their workloads tocloud, Terraform allows you to treat infrastructure as a piece of software (code) which can be written once and can be automated to be used multiple times. Like we saw in this tutorial,If you want to provision a Virtual Private Cloud in AWS, you can write a terraform configuration to automate this process rather than doing it manually from AWS console.
+ As Cloud becomes more popular and enterprises are migrating their workloads to cloud, Terraform allows you to treat infrastructure as a piece of software (code) which can be written once and can be automated to be used multiple times. Like we saw in this tutorial,If you want to provision a Virtual Private Cloud in AWS, you can write a terraform configuration to automate this process rather than doing it manually from AWS console.
 
 Now that you have learnt how to create your first infrastructure using Terraform, continue to the next tutorial to modify your infrastructure.
