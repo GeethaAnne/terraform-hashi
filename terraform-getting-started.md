@@ -120,7 +120,7 @@ $ terraform init
 ```
 ![](./init.png)
 
-## Build the infrastructure
+## Create Infrastructure
 To create the infrastructure you need to run the "terraform apply" command. Apply will use your existing credentials to authenticate you with AWS as the user and create the VPC resource. The output shows the execution plan and also asks for your approval before proceeding. If anything in the plan seems incorrect, you can safely stop the command from further executing, as there are no changes made to your infrastructure yet. If everthing looks good, input "yes" to proceed.
 
 ```shell
