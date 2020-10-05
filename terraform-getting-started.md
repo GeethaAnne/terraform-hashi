@@ -1,71 +1,158 @@
 # Getting Started with Terraform
 
-Terraform is the most popular langauge for defining and provisioning infrastructure as code (IaC). It uses the declarative language HCL (HashiCorp Configuration Language) to define infrastructure as code.
+Welcome! In this tutorial, we will introduce the basics of how to use Terraform to define ,manage and delete your infrastructure on AWS. You will learn how to create a VPC along with 2 Public Subnets.
 
-# What is infrastructure as code?
-Infrastructure as Code, in simple terms, is a means by which you can write declarative definitions for the infrastructure you want to exist and using them with a provisioning tool that deals with the actual deployment. This means that we can code what we want built, provide necessary credentials for the given IaaS provider, kick off the provisioning process and come back to find all your services purring along nicely in the cloud
+## Introduction to Terraform
+Terraform is a fully open sourced, configuration and orchestartion management tool by HashiCorp. It enables the declarative configuration of the infrastructure in structured text files so they can be managed like any other source code in a version control system. Terraform untilizes "infrastucture as code" as the operating framework under the hood and allows you to write the configuration file to plan, set up, change, and even dismantle an environment on baremetal servers or virtual machines on cloud platforms like AWS, GCP, GitHub, Docker, etc  
 
-In this tutorial, we will introduce the basics of how to use Terraform to define and manage your infrastructure.
+## How to Install Terraform
+To install Terraform, locate the relevant binary from the download page here. Download and install the binary on your local machine. Make sure that the path to the terraform binary is available on your system's PATH. This process will differ depending on your operating system.
 
-# Prerequisites
-To install Terraform, simply visit [Terraform.io](https://www.terraform.io/downloads.html) and download the compressed binary application executable file deliverable for your platform, machine or environment on which you like to run code and do development.
+### Verify Installation
+Verify the successful installation by testing out Terraform's available subcommands like help, version etc
+```shell
+$ terraform --version
+$ terraform --help
+```
+![](./install.png)
+
+## Build Infrastructure 
+With Terraform installed,let's dive right in and create some infrastructure. Make sure you have all the prequisites in place before you get started.
+
+### Prerequisites
+
+To follow this tutorial you will need:
+
+1. An AWS account
+
+2. AWS CLI installed
+
+3. AWS credentials configured locally 
+
+### Terraform Configuration File
+To build and deploy the infrastructure using Terraform, you need to create a configuration file. It is a human readable text file with “.tf “extension where you specify the infrastructure resource(s) you want to build.
+
+Terraform configuration is strictly declarative. meaning, when you write code, you specify the desired end state, and terraform will take the steps to achieve that end state.
+
+#### Provider
+Infrastructure providers (for example AWS, Google Cloud, Azure) are called “Providers” in Terraform. which is provider is responsible for managing resources and handling API interactions for the pieces of infrastructure that they manage. In a terraform configuration file, a provider is initialized with the “provider” keyword.
+
+#### Resource
+A resource is service that a provider wants to expose and can be provisioned. For instance, a VPC is a resource in AWS provider. In a terraform configuration file, a resource is initialized with the “resource” keyword.
 
 
-With Terraform installed, let's dive right into it and start creating some infrastructure.
-
- # Create a Working Directory
-Most users find it convinient to create a new directory on there local machine and create Terraform configuration code inside it.
+### Create a Working Directory
+Each configuration should be in its own directory. Create a directory for the new configuration.
 
 ```shell
-$ mkdir terraform-demo
-$ cd terraform-demo
+$ mkdir terraform-vpc-demo
+$ cd terraform-vpc-demo
 ```
-# Create Terrform 
-Next, create a file for your Terraform configuration code.
+
+### Prepare the Configuration File
+Create a main.tf file for your Terraform configuration code.
 
 ```shell
 $ touch main.tf
 ```
+### Initialize the AWS Provider
+Open the main.tf file through your favorite text editor and add the following code to configure the AWS provider:
 
-Paste the following lines into the file.
-
-```hcl
-provider "docker" {
-    host = "unix:///var/run/docker.sock"
+```shell
+provider “aws”
+{
+access_key = “Your AWS Access Key”
+secret_key = “Your AWS Secret Key”
+region=”us-east-2”
 }
+```
+The above code snippet will authenticate the user using AWS IAM account credentials. It also sets some important environment variables like “region” to tell AWS to build necessary resource in “us-east-2”. 
 
-resource "docker_container" "nginx" {
-  image = docker_image.nginx.latest
-  name  = "training"
-  ports {
-    internal = 80
-    external = 80
-  }
-}
+### Define aws_vpc Resources
+Once the provider is configured, you will now add the code that will define an “aws_vpc” resource. We will refer to this resource as “vpc_ganne”. Inside the resource block, specify values for parameters like cidr_block,enable_dns_support and instance_tenancy. You can find a complete list of parameters available for every resource in terroform documentation [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc)
 
-resource "docker_image" "nginx" {
-  name = "nginx:latest"
+ ```shell
+resource "aws_vpc" "vpc_ganne" {
+  cidr_block           = var.cidr_block
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+  instance_tenancy     = ”default”
 }
 ```
 
-Initialize Terraform with the `init` command. The Docker provider will be installed. 
+### Define aws_subnet Resource
+Now time to add the "aws_subnet" resource to the main.tf file:
+
+```shell
+ resource "aws_subnet" "public" {
+count=length(var.public_subnet_cidr_blocks)
+vpc_id  = aws_vpc.vpc_ganne.id
+cidr_block=var.public_subnet_cidr_blocks[count.index]
+map_public_ip_on_launch = true
+}
+
+```
+This main.tf will read values of input variables from "variables.tf" file, which you will configure in the next step. You may learn more about defining different types of variables in terraform
+ [here](https://www.terraform.io/docs/configuration/variables.html)
+ 
+### Define the input variables
+Open a variables.tf in your favorite text editor and add the below code:
+
+```shell
+variable "cidr_block" {
+  default     = "10.0.0.0/16"
+  type        = string
+  description = "CIDR block for the VPC"
+}
+
+variable "public_subnet_cidr_blocks" {
+  default     = ["10.0.0.0/24", "10.0.2.0/24"]
+  type        = list
+  description = "List of public subnet CIDR blocks"
+}
+ ```
+
+## Initialize the terraform deployment
+When you create a new configuration within a  directory, you need to intiatialize it. "init" will install any providers that are not yet installed and initialize this new configuration
 
 ```shell
 $ terraform init
 ```
+![](./init.png)
 
-You shoud check for any errors. If it ran successfully, provision the resource with the `apply` command.
+## Build or change the infrastructure
+To create the infrastructure you need to run the below command . Apply will use your existing credentials to authenticate you with AWS as the user and create the VPC resource. The output shows the execution plan and also asks for your approval before proceeding. If anything in the plan seems incorrect, you can stop the command from furthering, as there are no changes made to your infrastructure yet. If everthing looks good, input "yes" to proceed.
 
 ```shell
 $ terraform apply
 ```
+![](./apply.png)
 
-The command will take up to a few minutes to run and will display a message indicating that the resource was created.
+The command will take up to a few minutes to run and will display a message indicating that the resource was created with id:vpc-05ca7d3fece95456e
 
-Finally, destroy the infrastructure.
+Congratulations you have created infrasrtructure usinf Terraform !You can now visit the AWS's VPC dashboard to find the newly created vpc and subnets. Make sure to look in the right region thats specified in the main.tf file.
+![](./vpc.png)
+![](subnet.png)
+
+## Show Terraform State
+
+Terraform records the state of your infrastructure in a state file. This allows you to make incremental changes in the future by simply changing the same configuration file to match your desired end state. "show" command will help inspect the current terraform state.
+
+```shell
+$ terraform show
+```
+![](./show.png)
+
+## Tear down the infrastructure
+The "terraform destroy" command will terminate resources defined in your Terraform configuration.
 
 ```shell
 $ terraform destroy
 ```
+~[](./d2.png)
 
-Look for a message are the bottom of the output asking for confirmation. Type `yes` and hit ENTER. Terraform will destroy the resources it had created earlier.
+Terraform shows its execution plan and waits for approval before making any changes.
+You can input "yes" to execute this plan and destroy the infrastructure.
+
+![](destroy.png)
+
