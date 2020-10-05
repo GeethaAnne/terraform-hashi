@@ -1,6 +1,6 @@
 # Getting Started with Terraform
 
-Welcome! In this tutorial, we will introduce the basics of how to use Terraform to define,build,manage and delete infrastructure on AWS. You will learn how to create a VPC along with 2 Public Subnets.
+Welcome! In this tutorial, we will introduce the basics of how to use Terraform to define,build and manage infrastructure on AWS. You will learn how to create a VPC along with 2 Public Subnets.
 
 ## Introduction to Terraform
 Terraform is a fully open sourced, configuration and orchestartion management tool by HashiCorp. It enables the declarative configuration of the infrastructure in structured text files so they can be managed like any other source code in a version control system. Terraform untilizes "infrastucture as code" as the operating framework under the hood and allows you to write the configuration file to plan, set up, change, and even dismantle an environment on baremetal servers or virtual machines on cloud platforms like AWS, GCP, GitHub, Docker, etc  
@@ -49,13 +49,13 @@ $ mkdir terraform-vpc-demo
 $ cd terraform-vpc-demo
 ```
 
-### Prepare the Configuration File
+### Prepare the Configuration Files
 Create a main.tf file for your Terraform configuration code.
 
 ```shell
 $ touch main.tf
 ```
-### Initialize the AWS Provider
+#### Initialize the AWS Provider
 Open the main.tf file through your favorite text editor and add the following code to configure the AWS provider:
 
 ```shell
@@ -68,7 +68,7 @@ region=”us-east-2”
 ```
 The above code snippet will authenticate the user using AWS IAM account credentials. It also sets some important environment variables like “region” to tell AWS to build necessary resource in “us-east-2”. 
 
-### Define aws_vpc Resources
+#### Define aws_vpc resource
 Once the provider is configured, you will now add the code that will define an “aws_vpc” resource. Name of the resource in this case is “vpc_ganne”. Inside the resource block, specify values for parameters like cidr_block,enable_dns_support and instance_tenancy. You can find a complete list of parameters available for every resource in terroform documentation [here](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc)
 
  ```shell
@@ -80,7 +80,7 @@ resource "aws_vpc" "vpc_ganne" {
 }
 ```
 
-### Define aws_subnet Resource
+#### Define aws_subnet resource
 Now time to add the "aws_subnet" resource to the main.tf file:
 
 ```shell
@@ -95,7 +95,7 @@ map_public_ip_on_launch = true
 This main.tf will read values of input variables from "variables.tf" file, which you will configure in the next step. You may learn more about defining different types of input variables in terraform
  [here](https://www.terraform.io/docs/configuration/variables.html)
  
-### Define the input variables
+#### Define the input variables
 To become truly shareable and version controlled, we need to parameterize the configurations. Open a variables.tf in your favorite text editor and add the below code:
 
 ```shell
@@ -120,8 +120,8 @@ $ terraform init
 ```
 ![](./init.png)
 
-## Build or change the infrastructure
-To create the infrastructure you need to run the below command . Apply will use your existing credentials to authenticate you with AWS as the user and create the VPC resource. The output shows the execution plan and also asks for your approval before proceeding. If anything in the plan seems incorrect, you can stop the command from furthering, as there are no changes made to your infrastructure yet. If everthing looks good, input "yes" to proceed.
+## Build the infrastructure
+To create the infrastructure you need to run the below command. Apply will use your existing credentials to authenticate you with AWS as the user and create the VPC resource. The output shows the execution plan and also asks for your approval before proceeding. If anything in the plan seems incorrect, you can safely stop the command from further executing, as there are no changes made to your infrastructure yet. If everthing looks good, input "yes" to proceed.
 
 ```shell
 $ terraform apply
@@ -130,7 +130,7 @@ $ terraform apply
 
 The command will take up to a few minutes to run and will display a message indicating that the resource was created with id:vpc-05ca7d3fece95456e
 
-Congratulations you have created infrasrtructure using Terraform! You can now visit the AWS's VPC dashboard to find the newly created vpc and subnets. Make sure to look in the right region thats specified in the main.tf file.
+Congratulations you have created infrastructure using Terraform! You can now visit the AWS's VPC dashboard to find the newly created vpc and subnets. Make sure to look in the right region thats specified in the main.tf file.
 ![](./vpc.png)
 ![](subnet.png)
 
@@ -157,4 +157,4 @@ You can input "yes" to execute this plan and destroy the infrastructure.
 ![](destroy.png)
 
 ## Next Steps
-Now that you have learnt how to create and delete your first infrastructure using Terraform, continue to the next tutorial to modify your infrastructure.
+Now that you have learnt how to create your first infrastructure using Terraform, continue to the next tutorial to modify your infrastructure.
